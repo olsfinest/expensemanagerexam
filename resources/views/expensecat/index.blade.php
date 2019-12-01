@@ -1,0 +1,162 @@
+@extends('layouts.adminapp')
+
+@section('content')
+
+
+<div class="container">
+
+    <div class="card-header">Expense Categories</div>
+
+    <div class="">
+        @if (session('status'))
+            <div class="alert alert-success" role="alert">
+
+                {{ session('status') }}
+            </div>
+        @endif
+
+        <table class="table" id="table">
+            <thead>
+                <tr> 
+                    <th>Display Name</th>
+                    <th>Description</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+
+            <tr v-for="expensecat in expensescat">
+
+                <td @click="showModal = true; setVal(expensecat.id, expensecat.display_name, expensecat.description, expensecat.created_at)">@{{expensecat.display_name}}</td>
+                <td @click="showModal = true; setVal(expensecat.id, expensecat.display_name, expensecat.description, expensecat.created_at)">@{{expensecat.description}}</td>
+                <td @click="showModal = true; setVal(expensecat.id, expensecat.display_name, expensecat.description, expensecat.created_at)">@{{expensecat.created_at}}</td>
+
+                <td>  
+              </td>
+               
+            </tr>
+        </table>
+    
+  
+<button type="button" class="btn btn-info btn-md create_button" data-toggle="modal" data-target="#additems">Add Category</button>
+
+
+  <!-- Modal -->
+<div id="additems" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+        
+     
+      <div class="modal-body">
+          <h3 slot="header">Add Expense Category</h3>
+            <div class="form-group">
+
+                <label for="display_name">Category Name:</label>
+
+                <input type="text" class="form-control" id="display_name" name="display_name" v-model="newExpenseCat.display_name"  required   placeholder="Enter Category name ">
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="description ">Description:</label>
+
+                <textarea style="min-height:200px;" class="form-control" id="description" name="description" v-model="newExpenseCat.description"  required   placeholder="Enter Description">
+                  
+                </textarea>
+
+            </div>
+
+           
+           
+            <p class="text-center alert alert-danger" v-bind:class="{ hidden: hasError }">Please Fill All Fields!</p>
+
+
+
+            <button class="btn btn-primary" @click.prevent="createExpenseCat()" id="name" name="name">
+            <span class="glyphicon glyphicon-plus"></span> ADD EXPENSE CATEGORY</button>
+           
+
+      </div>
+
+      
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ref="close">Close</button>
+      </div>
+
+    </div>  
+    </div>
+
+  </div>
+
+
+
+
+
+  <modal v-if="showModal" @close="showModal=false">
+ 
+      <h3 slot="header">Update Expense Category</h3>
+
+      <div slot="body">
+        
+         
+            <input type="hidden" disabled class="form-control" id="e_id" name="id" required  :value="this.e_id">
+            
+            Category Name: <input type="text" class="form-control" id="e_name" name="name"  required  :value="this.e_name">
+            <br/>
+            Description: <input type="text" class="form-control" id="e_age" name="age"  required  :value="this.e_age">
+           
+          
+        </div>
+
+        <div slot="footer">
+
+          <button @click.prevent="deleteExpenseCat()" class="btn btn-info delete">Delete</button>
+          
+          <button class="btn btn-info update" @click="editExpenseCat()">
+            Update
+          </button>
+
+          <button class="btn btn-default cancel" @click="showModal = false">
+              Cancel
+            </button>
+        </div>
+
+    </modal>
+
+
+   
+    <script type="text/x-template" id="modal-template">
+      <transition name="modal">
+        <div class="modal-mask">
+          <div class="modal-wrapper">
+                  <div class="modal-container">
+  
+                  <div class="modal-header">
+                  <slot name="header">
+                   default header
+                  </slot>
+                  </div>
+            
+                  <div class="modal-body">
+                  <slot name="body">
+                                
+                  </slot>
+                  </div>
+            
+                  <div class="modal-footer">
+                  <slot name="footer">
+                                    
+                  </slot>
+               </div>
+              </div>
+          </div>
+        </div>
+      </transition>
+  </script>
+
+</div>
+
+@endsection
